@@ -8,7 +8,11 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 
+import javax.json.Json;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -118,8 +122,6 @@ public class PeerMain   {
 			
 		
 			
-			
-			
 			class enterServerButtonListener implements ActionListener{
 				
 				String[] usernamePort;
@@ -132,7 +134,7 @@ public class PeerMain   {
 					try {
 						usernamePort = bufferedReader.readLine().split(" ");
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
+						
 						e1.printStackTrace();
 					}
 					System.out.println("username: " + username + ", password: "+ password);
@@ -143,18 +145,31 @@ public class PeerMain   {
 						System.out.println("Unesite port, ne manji od 4 cifre.");
 					}else{
 						//necemo da zausmemo port ako nismo uneli ispravne kredencijale
+						//zato ovde tek uzimamo port
 						ServerThread serverThread;
+						preFrame.setVisible(false);
+						display();
 						try {
 								serverThread = new ServerThread(usernamePort[1]);
+							
 								serverThread.start();
+								
+								try {
+									
+									new PeerMain().updateListenToPeers(bufferedReader, username, serverThread);
+									
+								} catch (Exception e) {
+									
+									e.printStackTrace();
+								}
+								
 							} catch (IOException e) {
-								// TODO Auto-generated catch block
+							
 								e.printStackTrace();
 							}
 							
 							
-						preFrame.setVisible(false);
-						display();
+						
 					}
 				}
 //				public String getUsername() {
@@ -168,6 +183,64 @@ public class PeerMain   {
 //				}
 				
 			}
+			
+			
+			public void updateListenToPeers(BufferedReader bufferedReader,String username,ServerThread serverThread )throws Exception {
+				System.out.println(" >enter(space separated) hostname:port ");
+				System.out.println("peers to receive message from(s to skip)");
+				String input=bufferedReader.readLine();
+				String[] inputValues=input.split(" ");
+				if(!input.equals("s")) {
+					for(int i=0;i<inputValues.length;i++) {
+						//hostname:port
+						String[] address=inputValues[i].split(":");
+						System.out.println(address[1]);
+						Socket socket=null;
+						try {
+							socket=new Socket(address[0],Integer.valueOf(address[1]));
+							new PeerThread(socket).start();
+							//hocemo da otvorimo chat
+							
+						}catch(Exception e) {
+							e.printStackTrace();
+							
+							if(socket !=null)
+								socket.close();
+							else 
+								System.out.println("Invalid input,skipping to next step");
+						}
+				
+					}	
+				}
+				communicate(bufferedReader,username,serverThread);
+			}
+			public void communicate(BufferedReader bufferedReader,String username,ServerThread serverThread) {
+				try {
+					System.out.println("> you can now communicate(e to exit,c to change)");
+					boolean flag=true;
+					while(flag) {
+						String message=bufferedReader.readLine();
+						if(message.equals("e")) {
+							flag=false;
+							break;
+						}else if(message.equals("c")) {
+							updateListenToPeers(bufferedReader,username,serverThread);
+							
+						}else {
+							StringWriter stringWriter=new StringWriter();
+							Json.createWriter(stringWriter).writeObject(Json.createObjectBuilder().add("username",username).add("message",message).build());
+							serverThread.sendMessage(stringWriter.toString());
+							
+						}
+					}
+					System.exit(0);
+					
+				}catch(Exception e) {
+					
+				}
+			}
+			
+
 			
 			class sendMessageButtonListener implements ActionListener{
 				
