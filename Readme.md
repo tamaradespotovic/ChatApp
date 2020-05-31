@@ -1,4 +1,4 @@
-### Peer to peer chat app
+# Peer to peer chat app
 
 This app is used for communication between threads. 
 This is peer to peer type of communication where we don't have client and server but equal threads(peers).
@@ -10,7 +10,7 @@ Project is structured in four classes:
 - ServerThreadThread class is used for sending message
 - PeerThread class is used for writing message on output stream.
 
-About project:
+##About project:
 
 First, user needs to login with username and password. There is rule for password: must have more then 4 characters. After that screen, user should enter his username and port. There is check that username from login form matches username from console. 
 
@@ -23,7 +23,7 @@ Next user can choose between next options:
 - c: Update contact's list
 - e: Exit chat
 
-Impediments:
+##Impediments:
 
 - Finding a way to communicate between threads.
 - Integrating GUI for showing chat. Coudn't success to implement chat that will show message in right chat box.
