@@ -13,6 +13,7 @@ public class ServerThread extends Thread{
 	}
 	//posto smo pokrenuli nit ServerThread ovde mora run metod
 	public void run() {
+		System.out.println("Uslo u server thread");
 		try {
 			while(true) {
 				ServerThreadThread novaNit=new ServerThreadThread(serverSocket.accept(),this);

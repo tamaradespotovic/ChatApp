@@ -26,18 +26,27 @@ import javax.swing.UIManager;
 
 public class PeerMain   {
 	PeerMain mainGUI;
-	JFrame preFrame;
+	JFrame loginFrame;
+	JFrame usersFrame = new JFrame("Users");
 	JTextField usernameTextField;
 	JTextField passwordTextField;
+	JTextField usersPortField;
 	//ovo je potrebno za prikazivanje chat
-	JFrame newFrame=new JFrame("Chat ");
+	JFrame chatFrame=new JFrame("Chat ");
 	JButton sendMessage;
+	JButton addUsersButton;
 	JTextField messageBox;
 	JTextArea chatBox;
 	String username;
 	String password;
 	String port;
+	String usersPort;
+	ServerThread serverThread;
+	BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(System.in));
 	
+
+
+
 	public static void main(String[] args) throws Exception{
 	
 		
@@ -47,22 +56,22 @@ public class PeerMain   {
 				e.printStackTrace();
 			}
 		PeerMain mainGui =new PeerMain();
-		mainGui.preDisplay();
+		mainGui.displayLogin();
 
 			}
 	
 	
 	
 		//predisplay je potreban za logovanje,nakon toga pravimo display da bi prikazali  chat u kom mozemo da saljemo poruke
-			private void preDisplay() {
-				newFrame.setVisible(false);
-				preFrame=new JFrame("Login Chat");
+			private void displayLogin() {
+				loginFrame=new JFrame("Login Chat");
 				JLabel EnterUsernameLabel=new JLabel("Enter username:");
 				JLabel EnterPasswordLabel=new JLabel("Enter password:");
+				
 				usernameTextField = new JTextField();
 				passwordTextField = new JTextField();
 				JButton loginButton = new JButton("Login");
-				JPanel prePanel = new JPanel(new GridBagLayout());
+				JPanel loginPanel = new JPanel(new GridBagLayout());
 				GridBagConstraints rightBox = new GridBagConstraints();
 				rightBox.anchor = GridBagConstraints.EAST;
 				GridBagConstraints leftBox = new GridBagConstraints();
@@ -71,54 +80,20 @@ public class PeerMain   {
 				rightBox.weightx = 2.0;
 				rightBox.fill = GridBagConstraints.HORIZONTAL;
 				rightBox.gridwidth = GridBagConstraints.REMAINDER;
-				prePanel.add(EnterUsernameLabel, leftBox);
-				prePanel.add(usernameTextField, rightBox);
-				prePanel.add(EnterPasswordLabel, leftBox);
-				prePanel.add(passwordTextField, rightBox);
-				preFrame.add(BorderLayout.CENTER, prePanel);
-				preFrame.add(BorderLayout.SOUTH, loginButton);
-				
-				preFrame.setVisible(true);
-				preFrame.setSize(300,300);
+				loginPanel.add(EnterUsernameLabel, leftBox);
+				loginPanel.add(usernameTextField, rightBox);
+				loginPanel.add(EnterPasswordLabel, leftBox);
+				loginPanel.add(passwordTextField, rightBox);
+				loginFrame.add(BorderLayout.CENTER, loginPanel);
+				loginFrame.add(BorderLayout.SOUTH, loginButton);
+				loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				loginFrame.setVisible(true);
+				loginFrame.setSize(700,400);
 				loginButton.addActionListener(new enterServerButtonListener());
 				
-			}
 			
+			}	
 			
-			
-			private void display() {
-				newFrame.setVisible(true);
-				newFrame.setSize(470,300);
-				newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				
-				JPanel southPanel=new JPanel();
-				newFrame.add(BorderLayout.SOUTH,southPanel);
-				
-				southPanel.setLayout(new GridBagLayout());
-				southPanel.setBackground(Color.ORANGE);
-				GridBagConstraints left = new GridBagConstraints();
-				left.anchor = GridBagConstraints.WEST;
-				GridBagConstraints right = new GridBagConstraints();
-				right.anchor = GridBagConstraints.EAST;
-				right.weightx = 2.0;
-				
-				messageBox = new JTextField(30);
-				sendMessage = new JButton("Send Message");
-				
-				southPanel.add(messageBox,left);
-				southPanel.add(sendMessage,right);
-				
-				
-				chatBox = new JTextArea();
-				chatBox.setEditable(false);
-				chatBox.setLineWrap(true);
-				chatBox.setFont(new Font("Serif",Font.PLAIN,15));
-				
-				newFrame.add(new JScrollPane(chatBox),BorderLayout.CENTER);
-
-				sendMessage.addActionListener(new sendMessageButtonListener());
-				
-			}
 			
 		
 			
@@ -131,6 +106,7 @@ public class PeerMain   {
 					
 					username = usernameTextField.getText();
 					password = passwordTextField.getText();
+					loginFrame.dispose();
 					try {
 						usernamePort = bufferedReader.readLine().split(" ");
 					} catch (IOException e1) {
@@ -147,24 +123,16 @@ public class PeerMain   {
 						//necemo da zausmemo port ako nismo uneli ispravne kredencijale
 						//zato ovde tek uzimamo port
 						ServerThread serverThread;
-						preFrame.setVisible(false);
-						display();
 						try {
 								serverThread = new ServerThread(usernamePort[1]);
 							
 								serverThread.start();
-								
-								try {
-									
-									new PeerMain().updateListenToPeers(bufferedReader, username, serverThread);
-									
-								} catch (Exception e) {
-									
-									e.printStackTrace();
-								}
-								
+								new PeerMain().updateListenToPeers(bufferedReader, usernamePort[0], serverThread);
 							} catch (IOException e) {
 							
+								e.printStackTrace();
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 							
@@ -172,16 +140,9 @@ public class PeerMain   {
 						
 					}
 				}
-//				public String getUsername() {
-//					return username;
-//				}
-//				public String getPassword() {
-//					return password;
-//				}
-//				public String getPort() {
-//					return usernamePort[1];
-//				}
 				
+				
+
 			}
 			
 			
@@ -242,23 +203,7 @@ public class PeerMain   {
 			
 
 			
-			class sendMessageButtonListener implements ActionListener{
-				
-				public void actionPerformed(ActionEvent event) {
-					if(messageBox.getText().length()<1) {
-						//ne radi nista
-						
-					}else if(messageBox.getText().equals(".clear")) {
-						chatBox.setText("Cleared all messages\n");
-						messageBox.setText("");
-					}else {
-						
-						chatBox.append("<" + username + ">:" + messageBox.getText()+"\n");
-						messageBox.setText("");
-						
-					}
-				}
-			}
+			
 		
 
 	}
