@@ -13,14 +13,17 @@ public ServerThreadThread(Socket socket,ServerThread serverThread) {
 	this.socket=socket;
 	this.serverThread=serverThread;
 }
+
 public void run() {
 	System.out.println("Pozvano iz ServerThread");
 	try {
 		//prima poruku i vraca na output
+		
 		BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
 		this.printWriter=new PrintWriter(socket.getOutputStream(),true);
-		while(true)
+		while(true) {
 			serverThread.sendMessage(bufferedReader.readLine());
+		}
 		
 	} catch (Exception e) {
 		serverThread.getSkupNiti().remove(this);

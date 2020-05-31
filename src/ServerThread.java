@@ -3,10 +3,12 @@ import java.net.ServerSocket;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.swing.JTextField;
+
 public class ServerThread extends Thread{
 	private ServerSocket serverSocket;//deklarise soket
 	private Set<ServerThreadThread> skupNiti = new HashSet<ServerThreadThread>();//instancira
-	
+
 //konstruktor sa portom 
 	public ServerThread(String portNum) throws IOException{
 	serverSocket=new ServerSocket(Integer.valueOf(portNum));//inicijalizujemo sa tim portom
@@ -24,14 +26,19 @@ public class ServerThread extends Thread{
 		}
 	}
 	//metod za slanje poruka
+	
 	void sendMessage(String message) {
+		
 		try {
 			skupNiti.forEach(t -> t.getPrintWriter().println(message));
 		}catch(Exception e) {
-			e.printStackTrace();
-		}
+		e.printStackTrace();
+	}
 	}
 	
+	public ServerSocket getServerSocket() {
+		return serverSocket;
+	}
 	public Set<ServerThreadThread> getSkupNiti() {
 		return skupNiti;
 	}
