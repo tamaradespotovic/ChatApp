@@ -27,29 +27,16 @@ import javax.swing.UIManager;
 public class PeerMain   {
 	PeerMain mainGUI;
 	JFrame loginFrame;
-	JFrame usersFrame = new JFrame("Users");
 	JTextField usernameTextField;
 	JTextField passwordTextField;
-	JTextField usersPortField;
-	//ovo je potrebno za prikazivanje chat
-	JFrame chatFrame=new JFrame("Chat ");
-	JButton sendMessage;
-	JButton addUsersButton;
-	JTextField messageBox;
-	JTextArea chatBox;
 	String username;
 	String password;
-	String port;
-	String usersPort;
-	ServerThread serverThread;
 	BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(System.in));
 	
 
 
 
 	public static void main(String[] args) throws Exception{
-	
-		
 		try {
 			UIManager.getSystemLookAndFeelClassName();
 			}catch(Exception e) {
@@ -62,7 +49,6 @@ public class PeerMain   {
 	
 	
 	
-		//predisplay je potreban za logovanje,nakon toga pravimo display da bi prikazali  chat u kom mozemo da saljemo poruke
 			private void displayLogin() {
 				loginFrame=new JFrame("Login Chat");
 				JLabel EnterUsernameLabel=new JLabel("Enter username:");
@@ -89,7 +75,7 @@ public class PeerMain   {
 				loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				loginFrame.setVisible(true);
 				loginFrame.setSize(700,400);
-				loginButton.addActionListener(new enterServerButtonListener());
+				loginButton.addActionListener(new enterLoginButtonListener());
 				
 			
 			}	
@@ -97,7 +83,7 @@ public class PeerMain   {
 			
 		
 			
-			class enterServerButtonListener implements ActionListener{
+			class enterLoginButtonListener implements ActionListener{
 				
 				String[] usernamePort;
 				public void actionPerformed(ActionEvent event) {
@@ -120,8 +106,7 @@ public class PeerMain   {
 					}else if(usernamePort[1].length()<4){
 						System.out.println("Unesite port, ne manji od 4 cifre.");
 					}else{
-						//necemo da zausmemo port ako nismo uneli ispravne kredencijale
-						//zato ovde tek uzimamo port
+						
 						ServerThread serverThread;
 						try {
 								serverThread = new ServerThread(usernamePort[1]);
@@ -160,7 +145,6 @@ public class PeerMain   {
 						try {
 							socket=new Socket(address[0],Integer.valueOf(address[1]));
 							new PeerThread(socket).start();
-							//hocemo da otvorimo chat
 							
 						}catch(Exception e) {
 							e.printStackTrace();
