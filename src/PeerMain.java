@@ -101,10 +101,10 @@ public class PeerMain   {
 					}
 					System.out.println("username: " + username + ", password: "+ password);
 					if(!usernamePort[0].equals(username)) {
-						System.out.println("Pogresili ste username, pokusajte ponovo!");
+						System.out.println("Username is wrong , try again!");
 					
 					}else if(usernamePort[1].length()<4){
-						System.out.println("Unesite port, ne manji od 4 cifre.");
+						System.out.println("Enter your port, no less then 4 digits.");
 					}else{
 						
 						ServerThread serverThread;
@@ -182,7 +182,7 @@ public class PeerMain   {
 					System.exit(0);
 					
 				}catch(Exception e) {
-					
+					e.printStackTrace();
 				}
 			}
 
