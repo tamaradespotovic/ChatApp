@@ -15,7 +15,7 @@ Project is structured in four classes:
 First, user needs to login with username and password. There is rule for password: must have more then 4 characters. After that screen, user should enter his username and port. There is check that username from login form matches username from console. 
 
 Next step is to ask for contacts that you want to communicate with.
-User should enter contact details in form: <host-name>:<port>
+User should enter contact details in form: 	host-name : port
 User can enter more then one contact that he wants to communicate.
 
 Next user can choose between next options:

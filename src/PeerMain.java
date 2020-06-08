@@ -31,7 +31,6 @@ public class PeerMain   {
 	JTextField passwordTextField;
 	String username;
 	String password;
-	BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(System.in));
 	
 
 
@@ -70,11 +69,12 @@ public class PeerMain   {
 				loginPanel.add(usernameTextField, rightBox);
 				loginPanel.add(EnterPasswordLabel, leftBox);
 				loginPanel.add(passwordTextField, rightBox);
+				loginPanel.setBackground(Color.pink);
 				loginFrame.add(BorderLayout.CENTER, loginPanel);
 				loginFrame.add(BorderLayout.SOUTH, loginButton);
 				loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				loginFrame.setVisible(true);
-				loginFrame.setSize(700,400);
+				loginFrame.setSize(500,400);
 				loginButton.addActionListener(new enterLoginButtonListener());
 				
 			
@@ -125,10 +125,11 @@ public class PeerMain   {
 						
 					}
 				}
+			}
 				
 				
 
-			}
+			
 			
 			
 			public void updateListenToPeers(BufferedReader bufferedReader,String username,ServerThread serverThread )throws Exception {
@@ -184,12 +185,15 @@ public class PeerMain   {
 					
 				}
 			}
-			
+			}
+
+
+
 
 			
 			
 		
 
-	}
+	
 
 
