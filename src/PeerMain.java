@@ -25,7 +25,7 @@ import javax.swing.UIManager;
 
 
 public class PeerMain   {
-	PeerMain mainGUI;
+
 	JFrame loginFrame;
 	JTextField usernameTextField;
 	JTextField passwordTextField;
@@ -81,7 +81,7 @@ public class PeerMain   {
 			}	
 			
 			
-		
+	
 			
 			class enterLoginButtonListener implements ActionListener{
 				
@@ -185,6 +185,16 @@ public class PeerMain   {
 					
 				}
 			}
+
+
+
+			
+			
+			
+			
+			
+			
+			
 			}
 
 
